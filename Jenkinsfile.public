@@ -1,0 +1,208 @@
+pipeline {
+    agent {
+        docker {
+            label 'main'
+            image docker.build("storj-ci", "--pull https://github.com/storj/ci.git").id
+            args '-u root:root --cap-add SYS_PTRACE -v "/tmp/gomod":/go/pkg/mod -v "/tmp/npm":/npm --tmpfs "/tmp:exec,mode=777"'
+        }
+    }
+    options {
+          timeout(time: 26, unit: 'MINUTES')
+    }
+    environment {
+        NPM_CONFIG_CACHE = '/npm/cache'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                checkout scm
+
+                sh 'mkdir -p .build'
+
+                // make a backup of the mod file in case, for later linting
+                sh 'cp go.mod .build/go.mod.orig'
+
+                // download dependencies
+                sh 'go mod download'
+
+                sh 'service postgresql start'
+
+                sh 'make -j4 build-packages'
+                sh 'make install-sim'
+
+                sh 'cockroach start-single-node --insecure --store=type=mem,size=2GiB --listen-addr=localhost:26256 --http-addr=localhost:8086 --cache 512MiB --max-sql-memory 512MiB --background'
+                sh 'cockroach start-single-node --insecure --store=type=mem,size=2GiB --listen-addr=localhost:26257 --http-addr=localhost:8087 --cache 512MiB --max-sql-memory 512MiB --background'
+                sh 'cockroach start-single-node --insecure --store=type=mem,size=2GiB --listen-addr=localhost:26258 --http-addr=localhost:8088 --cache 512MiB --max-sql-memory 512MiB --background'
+                sh 'cockroach start-single-node --insecure --store=type=mem,size=2GiB --listen-addr=localhost:26259 --http-addr=localhost:8089 --cache 512MiB --max-sql-memory 512MiB --background'
+                sh 'cockroach start-single-node --insecure --store=type=mem,size=2GiB --listen-addr=localhost:26260 --http-addr=localhost:8090 --cache 256MiB --max-sql-memory 256MiB --background'
+            }
+        }
+
+        stage('Verification') {
+            parallel {
+                stage('Lint') {
+                    steps {
+                        sh 'check-copyright'
+                        sh 'check-large-files'
+                        sh 'check-imports -race ./...'
+                        sh 'check-peer-constraints -race'
+                        sh 'check-atomic-align ./...'
+                        sh 'check-monkit ./...'
+                        sh 'check-errs ./...'
+                        sh 'staticcheck ./...'
+                        sh 'golangci-lint --config /go/ci/.golangci.yml -j=2 run'
+                        sh 'check-mod-tidy -mod .build/go.mod.orig'
+                        sh 'make check-monitoring'
+                    }
+                }
+
+                stage('Tests') {
+                    environment {
+                        STORJ_TEST_COCKROACH = 'cockroach://root@localhost:26256/testcockroach?sslmode=disable;' +
+                            'cockroach://root@localhost:26257/testcockroach?sslmode=disable;' +
+                            'cockroach://root@localhost:26258/testcockroach?sslmode=disable;' +
+                            'cockroach://root@localhost:26259/testcockroach?sslmode=disable'
+                        STORJ_TEST_COCKROACH_ALT = 'cockroach://root@localhost:26260/testcockroach?sslmode=disable'
+                        STORJ_TEST_POSTGRES = 'postgres://postgres@localhost/teststorj?sslmode=disable'
+                        COVERFLAGS = "${ env.BRANCH_NAME != 'master' ? '' : '-coverprofile=.build/coverprofile -coverpkg=storj.io/storj/private/...,storj.io/storj/pkg/...,storj.io/storj/satellite/...,storj.io/storj/storage/...,storj.io/storj/storagenode/...,storj.io/storj/versioncontrol/...'}"
+                    }
+                    steps {
+                        sh 'cockroach sql --insecure --host=localhost:26256 -e \'create database testcockroach;\''
+                        sh 'cockroach sql --insecure --host=localhost:26257 -e \'create database testcockroach;\''
+                        sh 'cockroach sql --insecure --host=localhost:26258 -e \'create database testcockroach;\''
+                        sh 'cockroach sql --insecure --host=localhost:26259 -e \'create database testcockroach;\''
+                        sh 'cockroach sql --insecure --host=localhost:26260 -e \'create database testcockroach;\''
+
+                        sh 'psql -U postgres -c \'create database teststorj;\''
+                        sh 'use-ports -from 1024 -to 10000 &'
+                        sh 'go test -parallel 4 -p 6 -vet=off $COVERFLAGS -timeout 20m -json -race ./... 2>&1 | tee .build/tests.json | xunit -out .build/tests.xml'
+                        sh 'check-clean-directory'
+                    }
+
+                    post {
+                        always {
+                            sh script: 'cat .build/tests.json | tparse -all -top -slow 100', returnStatus: true
+                            archiveArtifacts artifacts: '.build/tests.json'
+                            junit '.build/tests.xml'
+
+                            script {
+                                if(fileExists(".build/coverprofile")){
+                                    sh script: 'filter-cover-profile < .build/coverprofile > .build/clean.coverprofile', returnStatus: true
+                                    sh script: 'gocov convert .build/clean.coverprofile > .build/cover.json', returnStatus: true
+                                    sh script: 'gocov-xml  < .build/cover.json > .build/cobertura.xml', returnStatus: true
+                                    cobertura coberturaReportFile: '.build/cobertura.xml',
+                                        lineCoverageTargets: '100, 0, 0',
+                                        autoUpdateHealth: true,
+                                        failUnhealthy: true
+                                }
+                            }
+                        }
+                    }
+                }
+
+                stage('Check Benchmark') {
+                    environment {
+                        STORJ_TEST_COCKROACH = 'cockroach://root@localhost:26256/benchcockroach?sslmode=disable'
+                        STORJ_TEST_POSTGRES = 'postgres://postgres@localhost/benchstorj?sslmode=disable'
+                    }
+                    steps {
+                        sh 'cockroach sql --insecure --host=localhost:26256 -e \'create database benchcockroach;\''
+
+                        sh 'psql -U postgres -c \'create database benchstorj;\''
+                        sh 'go test -parallel 1 -p 1 -vet=off -timeout 20m -short -run XYZXYZXYZXYZ -bench . -benchtime 1x ./...'
+                    }
+                }
+
+                stage('Integration') {
+                    environment {
+                        // use different hostname to avoid port conflicts
+                        STORJ_NETWORK_HOST4 = '127.0.0.2'
+                        STORJ_NETWORK_HOST6 = '127.0.0.2'
+
+                        STORJ_SIM_POSTGRES = 'postgres://postgres@localhost/teststorj2?sslmode=disable'
+                    }
+
+                    steps {
+                        sh 'psql -U postgres -c \'create database teststorj2;\''
+                        sh 'make test-sim'
+                        // sh 'make test-certificates' // flaky
+                    }
+                }
+
+                stage('Cockroach Integration') {
+                    environment {
+                        STORJ_NETWORK_HOST4 = '127.0.0.4'
+                        STORJ_NETWORK_HOST6 = '127.0.0.4'
+
+                        STORJ_SIM_POSTGRES = 'cockroach://root@localhost:26257/testcockroach4?sslmode=disable'
+                    }
+
+                    steps {
+                        sh 'cockroach sql --insecure --host=localhost:26257 -e \'create database testcockroach4;\''
+                        sh 'make test-sim'
+                        sh 'cockroach sql --insecure --host=localhost:26257 -e \'drop database testcockroach4;\''
+                    }
+                }
+
+                stage('Backwards Compatibility') {
+                    environment {
+                        STORJ_NETWORK_HOST4 = '127.0.0.3'
+                        STORJ_NETWORK_HOST6 = '127.0.0.3'
+
+                        STORJ_SIM_POSTGRES = 'postgres://postgres@localhost/teststorj3?sslmode=disable'
+                    }
+
+                    steps {
+                        sh 'psql -U postgres -c \'create database teststorj3;\''
+                        sh 'make test-sim-backwards-compatible'
+                    }
+                }
+
+
+                stage('Cockroach Backwards Compatibility') {
+                    environment {
+                        STORJ_NETWORK_HOST4 = '127.0.0.5'
+                        STORJ_NETWORK_HOST6 = '127.0.0.5'
+
+                        STORJ_SIM_POSTGRES = 'cockroach://root@localhost:26257/testcockroach5?sslmode=disable'
+                    }
+
+                    steps {
+                        sh 'cockroach sql --insecure --host=localhost:26257 -e \'create database testcockroach5;\''
+                        sh 'make test-sim-backwards-compatible'
+                        sh 'cockroach sql --insecure --host=localhost:26257 -e \'drop database testcockroach5;\''
+                    }
+                }
+
+                stage('satellite npm') {
+                    steps {
+                        dir("web/satellite") {
+                            sh 'npm run build'
+                            sh 'npm run lint'
+                            sh script: 'npm audit', returnStatus: true
+                            sh 'npm run test'
+                        }
+                    }
+                }
+
+                stage('storagenode npm') {
+                    steps {
+                        dir("web/storagenode") {
+                            sh 'npm run build'
+                            sh 'npm run lint'
+                            sh script: 'npm audit', returnStatus: true
+                            sh 'npm run test'
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sh "chmod -R 777 ." // ensure Jenkins agent can delete the working directory
+            deleteDir()
+        }
+    }
+}

@@ -1,0 +1,716 @@
+# admin peer http listening address
+# admin.address: ""
+
+# how often to run the reservoir chore
+# audit.chore-interval: 24h0m0s
+
+# max number of times to attempt updating a statdb batch
+# audit.max-retries-stat-db: 3
+
+# limit above which we consider an audit is failed
+# audit.max-reverify-count: 3
+
+# the minimum acceptable bytes that storage nodes can transfer per second to the satellite
+# audit.min-bytes-per-second: 128 B
+
+# the minimum duration for downloading a share from storage nodes before timing out
+# audit.min-download-timeout: 5m0s
+
+# how often to recheck an empty audit queue
+# audit.queue-interval: 1h0m0s
+
+# number of reservoir slots allotted for nodes, currently capped at 3
+# audit.slots: 3
+
+# number of workers to run audits on paths
+# audit.worker-concurrency: 2
+
+# how frequently checker should check for bad segments
+# checker.interval: 30s
+
+# how frequently irrepairable checker should check for lost pieces
+# checker.irreparable-interval: 30m0s
+
+# how stale reliable node cache can be
+# checker.reliability-cache-staleness: 5m0s
+
+# override value for repair threshold
+# checker.repair-override: 0
+
+# percent of held amount disposed to node after leaving withheld
+compensation.dispose-percent: 50
+
+# rate for data at rest per GB/hour
+compensation.rates.at-rest-gb-hours: "0.00000205"
+
+# rate for audit egress bandwidth per TB
+compensation.rates.get-audit-tb: "10"
+
+# rate for repair egress bandwidth per TB
+compensation.rates.get-repair-tb: "10"
+
+# rate for egress bandwidth per TB
+compensation.rates.get-tb: "20"
+
+# rate for repair ingress bandwidth per TB
+compensation.rates.put-repair-tb: "0"
+
+# rate for ingress bandwidth per TB
+compensation.rates.put-tb: "0"
+
+# comma separated monthly withheld percentage rates
+compensation.withheld-percents: 75,75,75,50,50,50,25,25,25,0,0,0,0,0,0
+
+# url link for account activation redirect
+# console.account-activation-redirect-url: ""
+
+# server address of the graphql api gateway and frontend app
+# console.address: :10100
+
+# auth token needed for access to registration token creation endpoint
+# console.auth-token: ""
+
+# secret used to sign auth tokens
+# console.auth-token-secret: ""
+
+# url link to contacts page
+# console.contact-info-url: https://forum.storj.io
+
+# default project limits for users
+# console.default-project-limit: 10
+
+# external endpoint of the satellite if hosted
+# console.external-address: ""
+
+# allow domains to embed the satellite in a frame, space separated
+# console.frame-ancestors: tardigrade.io
+
+# url link to general request page
+# console.general-request-url: https://support.tardigrade.io/hc/en-us/requests/new?ticket_form_id=360000379291
+
+# id for google tag manager
+# console.google-tag-manager-id: ""
+
+# url link to let us know page
+# console.let-us-know-url: https://storjlabs.atlassian.net/servicedesk/customer/portals
+
+# enable open registration
+# console.open-registration-enabled: false
+
+# names of partnered satellites
+# console.partnered-satellite-names: US-Central-1,Europe-West-1,Asia-East-1
+
+# url link to project limit increase request page
+# console.project-limits-increase-request-url: https://support.tardigrade.io/hc/en-us/requests/new?ticket_form_id=360000683212
+
+# number of events before the limit kicks in
+# console.rate-limit.burst: 5
+
+# the rate at which request are allowed
+# console.rate-limit.duration: 5m0s
+
+# number of IPs whose rate limits we store
+# console.rate-limit.num-limits: 1000
+
+# used to display at web satellite console
+# console.satellite-name: Storj
+
+# name of organization which set up satellite
+# console.satellite-operator: Storj Labs
+
+# used to initialize segment.io at web satellite console
+# console.segment-io-public-key: ""
+
+# used to communicate with web crawlers and other web robots
+# console.seo: "User-agent: *\nDisallow: \nDisallow: /cgi-bin/"
+
+# path to static resources
+# console.static-dir: ""
+
+# url link to terms and conditions page
+# console.terms-and-conditions-url: https://storj.io/storage-sla/
+
+# url link to sign up verification page
+# console.verification-page-url: https://tardigrade.io/verify
+
+# the public address of the node, useful for nodes behind NAT
+contact.external-address: ""
+
+# timeout for pinging storage nodes
+# contact.timeout: 10m0s
+
+# satellite database connection string
+# database: postgres://
+
+# satellite database api key lru capacity
+# database-options.api-keys-cache.capacity: 1000
+
+# satellite database api key expiration
+# database-options.api-keys-cache.expiration: 1m0s
+
+# macaroon revocation cache capacity
+# database-options.revocations-cache.capacity: 10000
+
+# macaroon revocation cache expiration
+# database-options.revocations-cache.expiration: 5m0s
+
+# how often to delete expired serial numbers
+# db-cleanup.serials-interval: 4h0m0s
+
+# Maximum Database Connection Lifetime, -1ns means the stdlib default
+# db.conn_max_lifetime: 30m0s
+
+# Maximum Amount of Idle Database connections, -1 means the stdlib default
+# db.max_idle_conns: 1
+
+# Maximum Amount of Open Database connections, -1 means the stdlib default
+# db.max_open_conns: 5
+
+# address to listen on for debug endpoints
+# debug.addr: 127.0.0.1:0
+
+# expose control panel
+# debug.control: false
+
+# provide the name of the peer to enable continuous cpu/mem profiling for
+# debug.profilername: ""
+
+# If set, a path to write a process trace SVG to
+# debug.trace-out: ""
+
+# how often to run the downtime detection chore.
+# downtime.detection-interval: 1h0m0s
+
+# the downtime estimation chore should check this many offline nodes
+# downtime.estimation-batch-size: 1000
+
+# max number of concurrent connections in estimation chore
+# downtime.estimation-concurrency-limit: 10
+
+# how often to run the downtime estimation chore
+# downtime.estimation-interval: 1h0m0s
+
+# set if expired segment cleanup is enabled or not
+# expired-deletion.enabled: true
+
+# the time between each attempt to go through the db and clean up expired segments
+# expired-deletion.interval: 120h0m0s
+
+# the number of nodes to concurrently send garbage collection bloom filters to
+# garbage-collection.concurrent-sends: 1
+
+# set if garbage collection is enabled or not
+# garbage-collection.enabled: true
+
+# the false positive rate used for creating a garbage collection bloom filter
+# garbage-collection.false-positive-rate: 0.1
+
+# the initial number of pieces expected for a storage node to have, used for creating a filter
+# garbage-collection.initial-pieces: 400000
+
+# the time between each send of garbage collection filters to storage nodes
+# garbage-collection.interval: 120h0m0s
+
+# the amount of time to allow a node to handle a retain request
+# garbage-collection.retain-send-timeout: 1m0s
+
+# if true, run garbage collection as part of the core
+# garbage-collection.run-in-core: false
+
+# if true, skip the first run of GC
+# garbage-collection.skip-first: true
+
+# size of the buffer used to batch inserts into the transfer queue.
+# graceful-exit.chore-batch-size: 500
+
+# how often to run the transfer queue chore.
+# graceful-exit.chore-interval: 30s
+
+# whether or not graceful exit is enabled on the satellite side.
+# graceful-exit.enabled: true
+
+# size of the buffer used to batch transfer queue reads and sends to the storage node.
+# graceful-exit.endpoint-batch-size: 300
+
+# maximum number of transfer failures per piece.
+# graceful-exit.max-failures-per-piece: 5
+
+# maximum inactive time frame of transfer activities per node.
+# graceful-exit.max-inactive-time-frame: 168h0m0s
+
+# maximum number of order limits a satellite sends to a node before marking piece transfer failed
+# graceful-exit.max-order-limit-send-count: 10
+
+# minimum age for a node on the network in order to initiate graceful exit
+# graceful-exit.node-min-age-in-months: 6
+
+# maximum percentage of transfer failures per node.
+# graceful-exit.overall-max-failures-percentage: 10
+
+# the minimum duration for receiving a stream from a storage node before timing out
+# graceful-exit.recv-timeout: 2h0m0s
+
+# path to the certificate chain for this identity
+identity.cert-path: /root/.local/share/storj/identity/satellite/identity.cert
+
+# path to the private key for this identity
+identity.key-path: /root/.local/share/storj/identity/satellite/identity.key
+
+# bandwidth cache key time to live
+# live-accounting.bandwidth-cache-ttl: 5m0s
+
+# what to use for storing real-time accounting data
+# live-accounting.storage-backend: ""
+
+# if true, log function filename and line number
+# log.caller: false
+
+# if true, set logging to development mode
+# log.development: false
+
+# configures log encoding. can either be 'console', 'json', or 'pretty'.
+# log.encoding: ""
+
+# the minimum log level to log
+# log.level: info
+
+# can be stdout, stderr, or a filename
+# log.output: stderr
+
+# if true, log stack traces
+# log.stack: false
+
+# smtp authentication type
+# mail.auth-type: login
+
+# oauth2 app's client id
+# mail.client-id: ""
+
+# oauth2 app's client secret
+# mail.client-secret: ""
+
+# sender email address
+# mail.from: ""
+
+# plain/login auth user login
+# mail.login: ""
+
+# plain/login auth user password
+# mail.password: ""
+
+# refresh token used to retrieve new access token
+# mail.refresh-token: ""
+
+# smtp server address
+# mail.smtp-server-address: ""
+
+# path to email templates source
+# mail.template-path: ""
+
+# uri which is used when retrieving new access token
+# mail.token-uri: ""
+
+# server address of the marketing Admin GUI
+# marketing.address: 127.0.0.1:8090
+
+# base url for marketing Admin GUI
+# marketing.base-url: ""
+
+# path to static resources
+# marketing.static-dir: ""
+
+# the database connection string to use
+# metainfo.database-url: postgres://
+
+# how long to wait for new observers before starting iteration
+# metainfo.loop.coalesce-duration: 5s
+
+# how many items to query in a batch
+# metainfo.loop.list-limit: 2500
+
+# rate limit (default is 0 which is unlimited segments per second)
+# metainfo.loop.rate-limit: 0
+
+# maximum time allowed to pass between creating and committing a segment
+# metainfo.max-commit-interval: 48h0m0s
+
+# maximum inline segment size
+# metainfo.max-inline-segment-size: 4.0 KiB
+
+# maximum segment metadata size
+# metainfo.max-metadata-size: 2.0 KiB
+
+# maximum segment size
+# metainfo.max-segment-size: 64.0 MiB
+
+# minimum remote segment size
+# metainfo.min-remote-segment-size: 1.2 KiB
+
+# maximum number of concurrent requests
+# metainfo.object-deletion.max-concurrent-requests: 10000
+
+# maximum number of requests per batch
+# metainfo.object-deletion.max-objects-per-request: 100
+
+# number of segments per request when looking for zombie segments
+# metainfo.object-deletion.zombie-segments-per-request: 3
+
+# toggle flag if overlay is enabled
+# metainfo.overlay: true
+
+# timeout for dialing nodes (0 means satellite default)
+# metainfo.piece-deletion.dial-timeout: 0s
+
+# threshold for retrying a failed node
+# metainfo.piece-deletion.fail-threshold: 5m0s
+
+# maximum number of concurrent requests to storage nodes
+# metainfo.piece-deletion.max-concurrency: 100
+
+# maximum number of concurrent pieces can be processed
+# metainfo.piece-deletion.max-concurrent-pieces: 1000000
+
+# maximum number of pieces per batch
+# metainfo.piece-deletion.max-pieces-per-batch: 5000
+
+# maximum number pieces per single request
+# metainfo.piece-deletion.max-pieces-per-request: 1000
+
+# timeout for a single delete request
+# metainfo.piece-deletion.request-timeout: 1m0s
+
+# the default bandwidth usage limit
+# metainfo.project-limits.default-max-bandwidth: 50.00 GB
+
+# the default storage usage limit
+# metainfo.project-limits.default-max-usage: 50.00 GB
+
+# max bucket count for a project.
+# metainfo.project-limits.max-buckets: 100
+
+# number of projects to cache.
+# metainfo.rate-limiter.cache-capacity: 10000
+
+# how long to cache the projects limiter.
+# metainfo.rate-limiter.cache-expiration: 10m0s
+
+# whether rate limiting is enabled.
+# metainfo.rate-limiter.enabled: true
+
+# request rate per project per second.
+# metainfo.rate-limiter.rate: 1000
+
+# the size of each new erasure share in bytes
+# metainfo.rs.erasure-share-size: 256 B
+
+# maximum buffer memory to be allocated for read buffers
+# metainfo.rs.max-buffer-mem: 4.0 MiB
+
+# the largest amount of pieces to encode to. n (upper bound for validation).
+# metainfo.rs.max-total-threshold: 130
+
+# the minimum pieces required to recover a segment. k.
+# metainfo.rs.min-threshold: 29
+
+# the largest amount of pieces to encode to. n (lower bound for validation).
+# metainfo.rs.min-total-threshold: 95
+
+# the minimum safe pieces before a repair is triggered. m.
+# metainfo.rs.repair-threshold: 35
+
+# the desired total pieces for a segment. o.
+# metainfo.rs.success-threshold: 80
+
+# the largest amount of pieces to encode to. n.
+# metainfo.rs.total-threshold: 110
+
+# validate redundancy scheme configuration
+# metainfo.rs.validate: true
+
+# address(es) to send telemetry to (comma-separated)
+# metrics.addr: collectora.storj.io:9000
+
+# application name for telemetry identification
+# metrics.app: satellite
+
+# application suffix
+# metrics.app-suffix: -release
+
+# the time between each metrics chore run
+# metrics.chore-interval: 15m0s
+
+# instance id prefix
+# metrics.instance-prefix: ""
+
+# how frequently to send up telemetry
+# metrics.interval: 1m0s
+
+# path to log for oom notices
+# monkit.hw.oomlog: /var/log/kern.log
+
+# encryption keys to encrypt info in orders
+# orders.encryption-keys: ""
+
+# how long until an order expires
+# orders.expiration: 48h0m0s
+
+# how many items in the rollups write cache before they are flushed to the database
+# orders.flush-batch-size: 10000
+
+# how often to flush the rollups write cache to the database
+# orders.flush-interval: 1m0s
+
+# include encrypted metadata in the order limit
+# orders.include-encrypted-metadata: false
+
+# how many concurrent orders to process at once. zero is unlimited
+# orders.orders-semaphore-size: 2
+
+# how many records to read in a single transaction when calculating billable bandwidth
+# orders.reported-rollups-read-batch-size: 1000
+
+# how many orders to batch per transaction
+# orders.settlement-batch-size: 250
+
+# rollout phase for the windowed endpoint
+# orders.window-endpoint-rollout-phase: phase1
+
+# The length of time to give suspended SNOs to diagnose and fix issues causing downtime. Afterwards, they will have one tracking period to reach the minimum online score before disqualification
+# overlay.audit-history.grace-period: 168h0m0s
+
+# The point below which a node is punished for offline audits. Determined by calculating the ratio of online/total audits within each window and finding the average across windows within the tracking period.
+# overlay.audit-history.offline-threshold: 0.6
+
+# The length of time to track audit windows for node suspension and disqualification
+# overlay.audit-history.tracking-period: 720h0m0s
+
+# The length of time spanning a single audit window
+# overlay.audit-history.window-size: 12h0m0s
+
+# disable node cache
+# overlay.node-selection-cache.disabled: false
+
+# how stale the node selection cache can be
+# overlay.node-selection-cache.staleness: 3m0s
+
+# the number of times a node has been audited to not be considered a New Node
+# overlay.node.audit-count: 100
+
+# the reputation cut-off for disqualifying SNs based on audit history
+# overlay.node.audit-reputation-dq: 0.6
+
+# the forgetting factor used to calculate the audit SNs reputation
+# overlay.node.audit-reputation-lambda: 0.95
+
+# weight to apply to audit reputation for total repair reputation calculation
+# overlay.node.audit-reputation-repair-weight: 1
+
+# weight to apply to audit reputation for total uplink reputation calculation
+# overlay.node.audit-reputation-uplink-weight: 1
+
+# the normalization weight used to calculate the audit SNs reputation
+# overlay.node.audit-reputation-weight: 1
+
+# require distinct IPs when choosing nodes for upload
+# overlay.node.distinct-ip: true
+
+# how much disk space a node at minimum must have to be selected for upload
+# overlay.node.minimum-disk-space: 500.00 MB
+
+# the minimum node software version for node selection queries
+# overlay.node.minimum-version: ""
+
+# the fraction of new nodes allowed per request
+# overlay.node.new-node-fraction: 0.05
+
+# the amount of time without seeing a node before its considered offline
+# overlay.node.online-window: 4h0m0s
+
+# whether nodes will be disqualified if they have been suspended for longer than the suspended grace period
+# overlay.node.suspension-dq-enabled: false
+
+# the time period that must pass before suspended nodes will be disqualified
+# overlay.node.suspension-grace-period: 168h0m0s
+
+# the number of times a node's uptime has been checked to not be considered a New Node
+# overlay.node.uptime-count: 100
+
+# number of update requests to process per transaction
+# overlay.update-stats-batch-size: 100
+
+# amount of percents that user will earn as bonus credits by depositing in STORJ tokens
+# payments.bonus-rate: 10
+
+# duration a new coupon is valid in months/billing cycles
+# payments.coupon-duration: 2
+
+# project limit to which increase to after applying the coupon, 0 B means not changing it from the default
+# payments.coupon-project-limit: 0 B
+
+# coupon value in cents
+# payments.coupon-value: 275
+
+# price user should pay for each TB of egress
+# payments.egress-tb-price: "45"
+
+# minimum value of coin payments in cents before coupon is applied
+# payments.min-coin-payment: 1000
+
+# price node receive for storing TB of audit in cents
+# payments.node-audit-bandwidth-price: 1000
+
+# price node receive for storing disk space in cents/TB
+# payments.node-disk-space-price: 150
+
+# price node receive for storing TB of egress in cents
+# payments.node-egress-bandwidth-price: 2000
+
+# price node receive for storing TB of repair in cents
+# payments.node-repair-bandwidth-price: 1000
+
+# price user should pay for each object stored in network per month
+# payments.object-price: "0.0000022"
+
+# proportion of users which require a balance to create projects [0-1]
+# payments.paywall-proportion: 1
+
+# payments provider to use
+# payments.provider: ""
+
+# price user should pay for storing TB per month
+# payments.storage-tb-price: "10"
+
+# amount of time we wait before running next account balance update loop
+# payments.stripe-coin-payments.account-balance-update-interval: 2m0s
+
+# toogle autoadvance feature for invoice creation
+# payments.stripe-coin-payments.auto-advance: false
+
+# coinpayments API private key key
+# payments.stripe-coin-payments.coinpayments-private-key: ""
+
+# coinpayments API public key
+# payments.stripe-coin-payments.coinpayments-public-key: ""
+
+# amount of time we wait before running next conversion rates update loop
+# payments.stripe-coin-payments.conversion-rates-cycle-interval: 10m0s
+
+# stripe API public key
+# payments.stripe-coin-payments.stripe-public-key: ""
+
+# stripe API secret key
+# payments.stripe-coin-payments.stripe-secret-key: ""
+
+# amount of time we wait before running next transaction update loop
+# payments.stripe-coin-payments.transaction-update-interval: 2m0s
+
+# how often to remove unused project bandwidth rollups
+# project-bw-cleanup.interval: 168h0m0s
+
+# number of months of project bandwidth rollups to retain, not including the current month
+# project-bw-cleanup.retain-months: 2
+
+# number of projects to cache.
+# project-limit.cache-capacity: 10000
+
+# how long to cache the project limits.
+# project-limit.cache-expiration: 10m0s
+
+# the URL for referral manager
+# referrals.referral-manager-url: ""
+
+# time limit for downloading pieces from a node for repair
+# repairer.download-timeout: 5m0s
+
+# whether to download pieces for repair in memory (true) or download to disk (false)
+# repairer.in-memory-repair: false
+
+# how frequently repairer should try and repair more data
+# repairer.interval: 5m0s
+
+# maximum buffer memory (in bytes) to be allocated for read buffers
+# repairer.max-buffer-mem: 4.00 MB
+
+# ratio applied to the optimal threshold to calculate the excess of the maximum number of repaired pieces to upload
+# repairer.max-excess-rate-optimal-threshold: 0.05
+
+# maximum segments that can be repaired concurrently
+# repairer.max-repair: 5
+
+# time limit for uploading repaired pieces to new storage nodes
+# repairer.timeout: 5m0s
+
+# time limit for an entire repair job, from queue pop to upload completion
+# repairer.total-timeout: 45m0s
+
+# how often to flush the reported serial rollups to the database
+# reported-rollup.interval: 5m0s
+
+# default queue batch size
+# reported-rollup.queue-batch-size: 10000
+
+# option for deleting tallies after they are rolled up
+# rollup.delete-tallies: true
+
+# how frequently rollup should run
+# rollup.interval: 24h0m0s
+
+# public address to listen on
+server.address: :7777
+
+# if true, client leaves may contain the most recent certificate revocation for the current certificate
+# server.extensions.revocation: true
+
+# if true, client leaves must contain a valid "signed certificate extension" (NB: verified against certs in the peer ca whitelist; i.e. if true, a whitelist must be provided)
+# server.extensions.whitelist-signed-leaf: false
+
+# path to the CA cert whitelist (peer identities must be signed by one these to be verified). this will override the default peer whitelist
+# server.peer-ca-whitelist-path: ""
+
+# identity version(s) the server will be allowed to talk to
+# server.peer-id-versions: latest
+
+# private address to listen on
+server.private-address: 127.0.0.1:7778
+
+# url for revocation database (e.g. bolt://some.db OR redis://127.0.0.1:6378?db=2&password=abc123)
+# server.revocation-dburl: bolt://testdata/revocations.db
+
+# if true, uses peer ca whitelist checking
+# server.use-peer-ca-whitelist: true
+
+# how frequently the tally service should run
+# tally.interval: 1h0m0s
+
+# address for jaeger agent
+# tracing.agent-addr: agent.tracing.datasci.storj.io:5775
+
+# application name for tracing identification
+# tracing.app: satellite
+
+# application suffix
+# tracing.app-suffix: -release
+
+# buffer size for collector batch packet size
+# tracing.buffer-size: 0
+
+# whether tracing collector is enabled
+# tracing.enabled: false
+
+# how frequently to flush traces to tracing agent
+# tracing.interval: 0s
+
+# buffer size for collector queue size
+# tracing.queue-size: 0
+
+# how frequent to sample traces
+# tracing.sample: 0
+
+# Interval to check the version
+# version.check-interval: 15m0s
+
+# Request timeout for version checks
+# version.request-timeout: 1m0s
+
+# server address to check its version against
+# version.server-address: https://version.storj.io
