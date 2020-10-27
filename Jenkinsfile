@@ -56,11 +56,5 @@ node('node') {
       throw err
 
   }
-  finally {
-    stage('Cleanup') {
-      sh 'make clean-images'
-      deleteDir()
-    }
 
-  }
 }
