@@ -4,13 +4,8 @@ node('node') {
   try {
     currentBuild.result = "SUCCESS"
 
-    stage('Checkout') {
-      lastStage = env.STAGE_NAME
-      checkout scm
 
-      echo "Current build result: ${currentBuild.result}"
-    }
-    if (env.BRANCH_NAME == "master") {
+    if (env.BRANCH_NAME == "main") {
         stage('Run UI Test') {
             lastStage = env.STAGE_NAME
             try {
