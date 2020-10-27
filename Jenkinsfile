@@ -40,7 +40,7 @@ node('node') {
             }
         }
     }
-
+  }
 
   catch (err) {
     echo "Caught errors! ${err}"
