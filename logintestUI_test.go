@@ -3,16 +3,14 @@ package storj
 import (
 	"fmt"
 	"github.com/bmizerany/assert"
-	"testing"
 	"strings"
-
+	"testing"
 
 	"time"
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/input"
 	"github.com/go-rod/rod/lib/launcher"
-
 )
 	var login string = "test1@g.com"
 	var password = "123qwe"
@@ -617,7 +615,7 @@ func Example_droplistChosing (){
 		fmt.Println(*page.MustElement("input.headerless-input").MustAttribute("placeholder"))
 		fmt.Println(page.MustElement("span.label").MustText())
 		// creation flow
-		page.MustElement("input.headerless-input").MustInput("23hf4fgf57f34")
+		page.MustElement("input.headerless-input").MustInput("jhghgf")
 		page.MustElement("span.label").MustClick()
 
 		fmt.Println(page.MustElement("h2.save-api-popup__title").MustText())
@@ -660,13 +658,48 @@ func Example_droplistChosing (){
 		page.MustElement("div.button.container").MustClick()
 		time.Sleep(1 * time.Second)
 		// creation flow
-		page.MustElement("input.headerless-input").MustInput("23hfee4fg57f34")
+		page.MustElement("input.headerless-input").MustInput("khg")
 		page.MustElement("span.label").MustClick()
 		time.Sleep(1 * time.Second)
 		page.MustElement("div.container").MustClick()
 		listAfterAdding := len(page.MustElements("div.apikey-item-container.item-component__item"))
-		assert.Equal(t, listAfterAdding, (listBeforeAdding + 1))
+		assert.Equal(t, listAfterAdding, listBeforeAdding + 1)
 
+	}
+
+	func Example_APIKeyDeletion()  {
+		page, browser := login_to_account()
+		defer browser.MustClose()
+		page.MustElement("a.navigation-area__item-container:nth-of-type(2)").MustClick()
+		page.MustElement("div.apikey-item-container.item-component__item").MustClick()
+
+		fmt.Println(page.MustElement("div.button.deletion.container").MustText())
+		fmt.Println(page.MustElement("div.button.container.transparent").MustText())
+		fmt.Println(page.MustElement("span.header-selected-api-keys__info-text").MustText())
+		page.MustElement("div.button.deletion.container").MustClick()
+		fmt.Println(page.MustElement("span.header-selected-api-keys__confirmation-label").MustText())
+		page.MustElement("div.button.deletion.container").MustClick()
+		fmt.Println(page.MustElement("p.notification-wrap__text-area__message").MustText())
+
+
+		//Output: Delete
+		// Cancel
+		// 1 API Keys selected
+		// Are you sure you want to delete 1 api key ?
+		// API keys deleted successfully
+	}
+
+	func TestAPIKeysDeletion(t *testing.T) {
+		page, browser := login_to_account()
+		defer browser.MustClose()
+		page.MustElement("a.navigation-area__item-container:nth-of-type(2)").MustClick()
+		listBeforeDeletion:= len(page.MustElements("div.apikey-item-container.item-component__item"))
+		page.MustElement("div.apikey-item-container.item-component__item").MustClick()
+		page.MustElement("div.button.deletion.container").MustClick()
+		page.MustElement("div.button.deletion.container").MustClick()
+		time.Sleep(2*time.Second)
+		listAfterDeletion:= len(page.MustElements("div.apikey-item-container.item-component__item"))
+		assert.Equal(t,listBeforeDeletion,listAfterDeletion+1)
 	}
 
 
