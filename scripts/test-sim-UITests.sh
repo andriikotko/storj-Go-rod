@@ -21,13 +21,10 @@ GOBIN=$TMP go install -v -ldflags "-X 'storj.io/uplink.maxSegmentSize=6MiB'" sto
 export PATH=$TMP:$PATH
 
 export STORJ_NETWORK_DIR=$TMP
-
+ls -lah $TMP
 STORJ_NETWORK_HOST4=${STORJ_NETWORK_HOST4:-127.0.0.1}
 STORJ_SIM_POSTGRES=${STORJ_SIM_POSTGRES:-""}
 #STORJ_CONSOLE_payments_stripe-coin-payments_coinpayments-private-key="5366b14A7Dc5A1b0FCc3C8845c5d903E8c6b6360de5f3667AD8B58f5E8cC017c"
-
-echo $(which uplink)
-echo $(which storj-sim)
 # setup the network
 # if postgres connection string is set as STORJ_SIM_POSTGRES then use that for testing
 if [ -z ${STORJ_SIM_POSTGRES} ]; then
